@@ -1,0 +1,4 @@
+goprom:
+  api:
+    group: "/api"
+    url: "localhost:8888"
