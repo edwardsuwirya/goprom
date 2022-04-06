@@ -28,10 +28,7 @@ func (a *appServer) instrumentationMiddleware() {
 
 func (a *appServer) handlers() {
 	publicRoute := a.routerEngine.Group(a.apiGroup)
-	a.routerEngine.GET("/metrics", func(context *gin.Context) {
-		h := promhttp.Handler()
-		h.ServeHTTP(context.Writer, context.Request)
-	})
+	delivery.NewPrometheusApi(a.routerEngine)
 	delivery.NewStudentApi(publicRoute)
 }
 
