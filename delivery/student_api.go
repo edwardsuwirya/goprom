@@ -24,13 +24,18 @@ func (api *StudentApi) initRouter() {
 
 func (api *StudentApi) getStudentById(c *gin.Context) {
 	name := c.Param("idcard")
+	c.Set("tag", "GET-STUDENT-BY-ID")
 	c.JSON(200, gin.H{
 		"message": name,
 	})
+	//c.AbortWithStatusJSON(500,gin.H{
+	//	"message": name,
+	//})
 }
 func (api *StudentApi) createStudent(c *gin.Context) {
 	var student model.Student
-	err := c.BindJSON(&student)
+	err := c.ShouldBindJSON(&student)
+	c.Set("tag", "CREATE-STUDENT")
 	if err != nil {
 		c.JSON(500, gin.H{
 			"message": err.Error(),

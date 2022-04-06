@@ -3,7 +3,10 @@ package server
 import (
 	"enigmacamp.com/goprom/config"
 	"enigmacamp.com/goprom/delivery"
+	"enigmacamp.com/goprom/delivery/middleware"
+	"enigmacamp.com/goprom/metric"
 	"github.com/gin-gonic/gin"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 type AppServer interface {
@@ -16,13 +19,24 @@ type appServer struct {
 	apiGroup     string
 }
 
+func (a *appServer) instrumentationMiddleware() {
+	metric.ExecuteCollector(metric.NewMemoryUsageCollector(metric.MemoryUsage))
+	a.routerEngine.Use(middleware.PrometheusUriRequestTotal())
+	a.routerEngine.Use(middleware.PrometheusUriRequestDuration())
+	a.routerEngine.Use(middleware.PrometheusUriErrorTotal())
+}
+
 func (a *appServer) handlers() {
 	publicRoute := a.routerEngine.Group(a.apiGroup)
-	delivery.NewPrometheusApi(publicRoute)
+	a.routerEngine.GET("/metrics", func(context *gin.Context) {
+		h := promhttp.Handler()
+		h.ServeHTTP(context.Writer, context.Request)
+	})
 	delivery.NewStudentApi(publicRoute)
 }
 
 func (a *appServer) Run() {
+	a.instrumentationMiddleware()
 	a.handlers()
 	err := a.routerEngine.Run(a.apiBaseUrl)
 	if err != nil {
