@@ -10,10 +10,10 @@ type PrometheusApi struct {
 }
 
 func NewPrometheusApi(publicRoute *gin.RouterGroup) *PrometheusApi {
-	studentApi := new(PrometheusApi)
-	studentApi.publicRoute = publicRoute
-	studentApi.initRouter()
-	return studentApi
+	promApi := new(PrometheusApi)
+	promApi.publicRoute = publicRoute
+	promApi.initRouter()
+	return promApi
 }
 func (api *PrometheusApi) initRouter() {
 	userRoute := api.publicRoute.Group("/metrics")
