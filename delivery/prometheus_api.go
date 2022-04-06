@@ -6,18 +6,17 @@ import (
 )
 
 type PrometheusApi struct {
-	publicRoute *gin.RouterGroup
+	router *gin.Engine
 }
 
-func NewPrometheusApi(publicRoute *gin.RouterGroup) *PrometheusApi {
+func NewPrometheusApi(router *gin.Engine) *PrometheusApi {
 	promApi := new(PrometheusApi)
-	promApi.publicRoute = publicRoute
+	promApi.router = router
 	promApi.initRouter()
 	return promApi
 }
 func (api *PrometheusApi) initRouter() {
-	userRoute := api.publicRoute.Group("/metrics")
-	userRoute.GET("", func(context *gin.Context) {
+	api.router.GET("/metrics", func(context *gin.Context) {
 		h := promhttp.Handler()
 		h.ServeHTTP(context.Writer, context.Request)
 	})

@@ -18,7 +18,7 @@ type appServer struct {
 
 func (a *appServer) handlers() {
 	publicRoute := a.routerEngine.Group(a.apiGroup)
-	delivery.NewPrometheusApi(publicRoute)
+	delivery.NewPrometheusApi(a.routerEngine)
 	delivery.NewStudentApi(publicRoute)
 }
 
