@@ -4,7 +4,6 @@ import (
 	"enigmacamp.com/goprom/config"
 	"enigmacamp.com/goprom/delivery"
 	"enigmacamp.com/goprom/delivery/middleware"
-	"enigmacamp.com/goprom/metric"
 	"github.com/gin-gonic/gin"
 )
 
@@ -19,7 +18,7 @@ type appServer struct {
 }
 
 func (a *appServer) instrumentationMiddleware() {
-	metric.ExecuteCollector(metric.NewMemoryUsageCollector(metric.MemoryUsage))
+	//metric.ExecuteCollector(metric.NewMemoryUsageCollector(metric.MemoryUsage))
 	a.routerEngine.Use(middleware.PrometheusUriRequestTotal())
 	a.routerEngine.Use(middleware.PrometheusUriRequestDuration())
 	a.routerEngine.Use(middleware.PrometheusUriErrorTotal())

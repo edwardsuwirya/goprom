@@ -5,8 +5,8 @@ import (
 )
 
 type Student struct {
-	Id        int
-	Name      string
+	Id        int    `binding:"required"`
+	Name      string `binding:"required"`
 	Gender    string
 	Age       int
 	JoinDate  time.Time `db:"join_date"`

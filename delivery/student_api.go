@@ -37,12 +37,9 @@ func (api *StudentApi) createStudent(c *gin.Context) {
 	err := c.ShouldBindJSON(&student)
 	c.Set("tag", "CREATE-STUDENT")
 	if err != nil {
-		c.JSON(500, gin.H{
+		c.JSON(400, gin.H{
 			"message": err.Error(),
 		})
-		return
-	}
-	if err != nil {
 		return
 	}
 	c.JSON(200, gin.H{
